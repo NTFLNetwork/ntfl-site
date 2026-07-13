@@ -146,16 +146,19 @@
               <p>${state.site.tagline}</p>
             </div>
           </div>
-          <nav class="nav">
-            <a class="${activeClass('home')}" href="index.html">Home</a>
-            <a class="${activeClass('teams')}" href="teams.html">Teams</a>
-            <a class="${activeClass('schedule')}" href="schedule.html">Schedule</a>
-            <a class="${activeClass('standings')}" href="standings.html">Standings</a>
-            <a class="${activeClass('hof')}" href="hof.html">Hall of Fame</a>
-            <a class="${activeClass('history')}" href="history.html">History</a>
-            <a class="${activeClass('admin')}" href="admin.html">Admin</a>
-          </nav>
-        </div>
+          <div class="header-left">
+  <img src="IMG_5900.png" class="logo">
+
+  <nav class="nav">
+    <a class="${activeClass('home')}" href="index.html">Home</a>
+    <a class="${activeClass('teams')}" href="teams.html">Teams</a>
+    <a class="${activeClass('schedule')}" href="schedule.html">Schedule</a>
+    <a class="${activeClass('standings')}" href="standings.html">Standings</a>
+    <a class="${activeClass('hof')}" href="hof.html">Hall of Fame</a>
+    <a class="${activeClass('history')}" href="history.html">History</a>
+    <a class="${activeClass('admin')}" href="admin.html">Admin</a>
+  </nav>
+</div>
       </header>`;
   }
 
