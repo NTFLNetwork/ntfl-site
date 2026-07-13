@@ -1,0 +1,109 @@
+
+<html><head><style>
+body{font-family:Arial;margin:0;background:#0b1220;color:white}
+.header{display:flex;justify-content:space-between;align-items:center;background:#111827;padding:10px}
+.wrap{padding:12px}
+.card{background:#1f2937;padding:12px;margin:10px 0;border-radius:8px}
+button{margin:4px;padding:6px}
+input,select{padding:6px;margin:4px}
+.team{display:flex;align-items:center;gap:10px;margin:6px 0}
+.team img{height:30px;width:30px;object-fit:contain}
+.draggable{padding:8px;background:#374151;margin:4px 0;cursor:grab}
+</style></head><body>
+<script>
+let state = JSON.parse(localStorage.getItem("ntfl")) || {site:{name:"NTFL"},teams:[],standings:[],rankings:[]};
+
+function save(){localStorage.setItem("ntfl",JSON.stringify(state));renderAll();}
+
+function header(){
+return '<div class="header"><b>'+state.site.name+'</b><div><a href="index.html">Home</a> | <a href="admin.html">Admin</a></div></div>'
+}
+</script>
+<script>document.write(header())</script>
+
+<div class="wrap">
+
+<div class="card">
+<h3>Add Team</h3>
+<input id="teamName" placeholder="Team Name">
+<input type="file" id="teamLogo">
+<button onclick="addTeam()">Add</button>
+<div id="teamList"></div>
+</div>
+
+<div class="card">
+<h3>Standings</h3>
+<select id="teamSelect"></select>
+<input id="wins" placeholder="Wins">
+<input id="losses" placeholder="Losses">
+<button onclick="saveStanding()">Save</button>
+<div id="standList"></div>
+</div>
+
+<div class="card">
+<h3>Rankings (Drag to reorder)</h3>
+<div id="rankDrag"></div>
+</div>
+
+</div>
+
+<script>
+function addTeam(){
+let file = teamLogo.files[0]
+let reader = new FileReader()
+reader.onload = function(e){
+state.teams.push({name:teamName.value,logo:e.target.result})
+save()
+}
+if(file) reader.readAsDataURL(file)
+}
+
+function saveStanding(){
+let t=teamSelect.value
+state.standings = state.standings.filter(s=>s.team!==t)
+state.standings.push({team:t,w:wins.value,l:losses.value})
+save()
+}
+
+function updateDropdown(){
+teamSelect.innerHTML = state.teams.map(t=>`<option>${t.name}</option>`).join("")
+}
+
+function renderLists(){
+teamList.innerHTML = state.teams.map((t,i)=>`<div>${t.name} <button onclick="delTeam(${i})">X</button></div>`).join("")
+standList.innerHTML = state.standings.map(s=>`${s.team} ${s.w}-${s.l}`).join("<br>")
+}
+
+function delTeam(i){
+state.teams.splice(i,1)
+save()
+}
+
+function renderDrag(){
+rankDrag.innerHTML = state.teams.map(t=>`<div class="draggable" draggable="true">${t.name}</div>`).join("")
+let drags = document.querySelectorAll('.draggable')
+drags.forEach(d=>{
+d.addEventListener('dragstart',()=>d.classList.add('dragging'))
+d.addEventListener('dragend',()=>{d.classList.remove('dragging');saveRank()})
+})
+rankDrag.addEventListener('dragover',e=>{
+e.preventDefault()
+const after = [...rankDrag.querySelectorAll('.draggable:not(.dragging)')]
+.find(el=>e.clientY <= el.offsetTop + el.offsetHeight/2)
+const dragging = document.querySelector('.dragging')
+if(after==null) rankDrag.appendChild(dragging)
+else rankDrag.insertBefore(dragging,after)
+})
+}
+
+function saveRank(){
+let order = [...document.querySelectorAll('.draggable')].map(el=>el.textContent)
+state.rankings = order.map((t,i)=>({team:t,rank:i+1}))
+save()
+}
+
+function renderAll(){updateDropdown();renderLists();renderDrag()}
+renderAll()
+</script>
+
+</body></html>
