@@ -109,3 +109,26 @@ hr.sep{border:none;border-top:1px solid var(--line);margin:18px 0}
   display: block;
   margin: 20px auto;
 }
+.navbar {
+  display: flex;
+  align-items: center;
+  background: #111;
+  padding: 10px 20px;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  margin-right: 20px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  margin-right: 15px;
+  font-weight: bold;
+}
+
+.nav-links a:hover {
+  color: #00ffcc;
+}
